@@ -4,6 +4,9 @@ const cors = require("cors");
 
 const app = express();
 
+const userRouter = require("./routes/userRoute");
+const productRouter = require("./routes/productRoute");
+
 app.use(cors());
 app.use(express.json());
 
@@ -19,9 +22,7 @@ mongoose
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
-app.use("/res", (req, res, next) => {
-  res.send("hi");
-  console.log("hi");
-});
+app.use("/user", userRouter);
+app.use("/product", productRouter);
 
 app.listen(9000);
