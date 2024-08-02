@@ -1,4 +1,5 @@
 const { cloudinary_js_config } = require("../cloudinaryConfig");
+const Cart = require("../models/cartSchema");
 const Product = require("../models/productSchema");
 const fs = require("fs");
 
@@ -181,6 +182,49 @@ const product_Controller = {
     } catch (error) {
       console.log(error);
       res.status(500).json({ message: "Internal Server Error" });
+    }
+  },
+  addToCart: async (req, res) => {
+    const { userId, productId, quantity } = req.body;
+
+    try {
+      let cart = await Cart.findOne({ userId });
+
+      if (cart) {
+        const productIndex = cart.items.findIndex(
+          (item) => item.productId.toString() === productId
+        );
+
+        if (productIndex > -1) {
+          cart.items[productIndex].quantity += quantity;
+        } else {
+          cart.items.push({ productId, quantity });
+        }
+      } else {
+        cart = new Cart({ userId, items: [{ productId, quantity }] });
+      }
+
+      await cart.save();
+      res
+        .status(200)
+        .json({ message: "Product added to cart successfully", cart });
+    } catch (error) {
+      res.status(500).json({ message: "Server error", error });
+    }
+  },
+  getCartItems: async (req, res) => {
+    const { userId } = req.params;
+
+    try {
+      const cart = await Cart.findOne({ userId }).populate("items.productId");
+
+      if (!cart) {
+        return res.status(404).json({ message: "Cart not found" });
+      }
+
+      res.status(200).json(cart);
+    } catch (error) {
+      res.status(500).json({ message: "Server error", error });
     }
   },
 };

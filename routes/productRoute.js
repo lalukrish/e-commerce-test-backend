@@ -11,10 +11,8 @@ router.post(
 
 router.get("/get-all-products", productController.getAllProduct);
 
-// Route for updating product status
 router.put("/product-status/:id", productController.updateProductStatus);
 
-// Route for deleting a product
 router.delete("/delete-product/:id", productController.deleteProduct);
 
 router.put(
@@ -25,5 +23,9 @@ router.put(
 
 router.get("/list-all-products", productController.getListProductAll);
 router.get("/get-single-product/:id", productController.getSignleProduct);
+
+router.post("/add-to-cart", productController.addToCart);
+
+router.get("/get-cart-items/:userId", productController.getCartItems);
 
 module.exports = router;
