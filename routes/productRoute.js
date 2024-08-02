@@ -17,4 +17,13 @@ router.put("/product-status/:id", productController.updateProductStatus);
 // Route for deleting a product
 router.delete("/delete-product/:id", productController.deleteProduct);
 
+router.put(
+  "/update-product/:id",
+  upload.single("file"),
+  productController.updateProduct
+);
+
+router.get("/list-all-products", productController.getListProductAll);
+router.get("/get-single-product/:id", productController.getSignleProduct);
+
 module.exports = router;

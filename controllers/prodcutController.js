@@ -131,5 +131,57 @@ const product_Controller = {
       res.status(500).json({ message: "Internal server error", error });
     }
   },
+  updateProduct: async (req, res) => {
+    const { id } = req.params;
+    const { name, review, color, price, description, variant } = req.body;
+    const { file } = req;
+
+    try {
+      let updatedFields = { name, review, color, price, description, variant };
+
+      if (file) {
+        const image = await product_Controller.cloudImage(file.path);
+        updatedFields.image = image;
+      }
+
+      const updatedProduct = await Product.findByIdAndUpdate(
+        id,
+        { $set: updatedFields },
+        { new: true }
+      );
+
+      if (!updatedProduct) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+
+      res
+        .status(200)
+        .json({ message: "Product updated successfully", updatedProduct });
+    } catch (error) {
+      console.error("Error updating product:", error);
+      res.status(500).json({ message: "Internal server error", error });
+    }
+  },
+  getListProductAll: async (req, res) => {
+    try {
+      const products = await Product.find({ status: true });
+      res.json(products);
+    } catch (error) {
+      res.status(500).json({ message: " Internal Server Error" });
+    }
+  },
+  getSignleProduct: async (req, res) => {
+    const product_id = req.params.id;
+    try {
+      const product = await Product.findById(product_id);
+      if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+      res.json(product);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  },
 };
 module.exports = product_Controller;
