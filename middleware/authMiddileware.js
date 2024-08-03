@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/userSchema");
 
 const generateToken = (user) => {
-  return jwt.sign({ id: user._id }, "sdfssfdf2", {
+  return jwt.sign({ id: user._id }, "sdfssfdsdfjsfl23f2", {
     expiresIn: "1h",
   });
 };
@@ -21,7 +21,7 @@ const authenticate = async (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, "sdfssfdf2");
+    const decoded = jwt.verify(token, "sdfssfdsdfjsfl23f2");
     req.user = await User.findById(decoded.id);
     if (!req.user) {
       return res.status(401).json({ message: "User not found" });

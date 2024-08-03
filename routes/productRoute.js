@@ -2,30 +2,55 @@ const express = require("express");
 const router = express.Router();
 const productController = require("../controllers/prodcutController");
 const upload = require("../multerConfig");
+const { authenticate } = require("../middleware/authMiddileware");
 
 router.post(
   "/create-product",
   upload.single("image"),
+  authenticate,
+
   productController.createProduct
 );
 
-router.get("/get-all-products", productController.getAllProduct);
+router.get("/get-all-products", authenticate, productController.getAllProduct);
 
-router.put("/product-status/:id", productController.updateProductStatus);
+router.put(
+  "/product-status/:id",
+  authenticate,
+  productController.updateProductStatus
+);
 
-router.delete("/delete-product/:id", productController.deleteProduct);
+router.delete(
+  "/delete-product/:id",
+  authenticate,
+  productController.deleteProduct
+);
 
 router.put(
   "/update-product/:id",
   upload.single("file"),
+  authenticate,
+
   productController.updateProduct
 );
 
-router.get("/list-all-products", productController.getListProductAll);
-router.get("/get-single-product/:id", productController.getSignleProduct);
+router.get(
+  "/list-all-products",
+  authenticate,
+  productController.getListProductAll
+);
+router.get(
+  "/get-single-product/:id",
+  authenticate,
+  productController.getSignleProduct
+);
 
-router.post("/add-to-cart", productController.addToCart);
+router.post("/add-to-cart", authenticate, productController.addToCart);
 
-router.get("/get-cart-items/:userId", productController.getCartItems);
+router.get(
+  "/get-cart-items/:userId",
+  authenticate,
+  productController.getCartItems
+);
 
 module.exports = router;

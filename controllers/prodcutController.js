@@ -13,7 +13,7 @@ const product_Controller = {
         public_id: result.public_id,
       };
     } catch (error) {
-      console.error("Error uploading image to Cloudinary:", error);
+      console.error("Error uploading image to Cloudinary::", error);
       throw error;
     }
   },
